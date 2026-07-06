@@ -2,7 +2,7 @@
 
 > **Interactive multi-framework Python scaffolding CLI** — scaffold a production-ready FastAPI or Django project in under 60 seconds.
 
-[![CI](https://github.com/galanjabal/bootpy/actions/workflows/ci.yml/badge.svg)](https://github.com/galanjabal/bootpy/actions/workflows/ci.yml)
+[![CI](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml/badge.svg)](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PyPI version](https://img.shields.io/pypi/v/bootpy)](https://pypi.org/project/bootpy/)
@@ -155,7 +155,7 @@ my-django-project/
 ## 🔧 Development Setup
 
 ```bash
-git clone https://github.com/galanjabal/bootpy
+git clone https://github.com/galanjabal3/bootpy
 cd bootpy
 
 python3 -m venv .venv
