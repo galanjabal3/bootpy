@@ -1,0 +1,102 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt, JWTError
+{% if async_orm %}
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from app.db.session import get_db
+from app.models.user import User as UserModel
+{% endif %}
+from app.core.config import settings
+from app.core import security
+from app.schemas.user import User, UserCreate
+from app.schemas.token import TokenPayload
+
+router = APIRouter()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/login/access-token")
+
+{% if async_orm %}
+async def get_current_user(
+    db: AsyncSession = Depends(get_db),
+    token: str = Depends(oauth2_scheme)
+) -> UserModel:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+        token_payload = TokenPayload(sub=user_id)
+    except JWTError:
+        raise credentials_exception
+        
+    result = await db.execute(select(UserModel).filter(UserModel.id == int(token_payload.sub)))
+    user = result.scalars().first()
+    if user is None:
+        raise credentials_exception
+    return user
+
+@router.post("/", response_model=User)
+async def create_user(
+    user_in: UserCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(select(UserModel).filter(UserModel.email == user_in.email))
+    existing_user = result.scalars().first()
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail="The user with this username already exists in the system.",
+        )
+    db_obj = UserModel(
+        email=user_in.email,
+        hashed_password=security.get_password_hash(user_in.password),
+        is_active=user_in.is_active
+    )
+    db.add(db_obj)
+    await db.commit()
+    await db.refresh(db_obj)
+    return db_obj
+
+@router.get("/me", response_model=User)
+async def read_user_me(current_user: UserModel = Depends(get_current_user)):
+    return current_user
+{% else %}
+# In-memory database mock fallback
+MOCK_USERS = []
+
+def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    # We always return the admin mock user for simplicity
+    return {"id": int(user_id), "email": "admin@example.com", "is_active": True}
+
+@router.post("/", response_model=User)
+def create_user(user_in: UserCreate):
+    new_user = {
+        "id": len(MOCK_USERS) + 2,
+        "email": user_in.email,
+        "is_active": user_in.is_active
+    }
+    MOCK_USERS.append(new_user)
+    return new_user
+
+@router.get("/me", response_model=User)
+def read_user_me(current_user: dict = Depends(get_current_user)):
+    return current_user
+{% endif %}

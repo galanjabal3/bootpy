@@ -1,0 +1,48 @@
+# {{ project_name }}
+
+Scaffolded with `bootpy` (Django + {{ database }}).
+
+## Getting Started
+
+1. Create a virtual environment:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run migrations:
+   ```bash
+   python manage.py migrate
+   ```
+
+4. Run the development server:
+   ```bash
+   python manage.py runserver
+   ```
+
+   The application will be available at http://127.0.0.1:8000
+
+{% if docker %}
+## Docker Support
+
+You can run the entire stack with Docker Compose:
+
+```bash
+docker-compose up --build
+```
+{% endif %}
+
+{% if pytest %}
+## Running Tests
+
+Run tests using pytest:
+
+```bash
+pytest
+```
+{% endif %}

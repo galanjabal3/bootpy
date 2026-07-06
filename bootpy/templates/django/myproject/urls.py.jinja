@@ -1,0 +1,13 @@
+from django.urls import path, include
+{% if django_admin %}
+from django.contrib import admin
+{% endif %}
+from core.views import HealthCheckView
+
+urlpatterns = [
+    {% if django_admin %}
+    path('admin/', admin.site.urls),
+    {% endif %}
+    path('health/', HealthCheckView.as_view(), name='health-check'),
+    path('api/', include('core.urls')),
+]

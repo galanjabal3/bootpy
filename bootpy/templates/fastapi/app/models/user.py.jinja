@@ -1,0 +1,19 @@
+{% if async_orm %}
+from sqlalchemy import Column, Integer, String, Boolean
+from app.db.base import Base
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+{% else %}
+class User:
+    def __init__(self, id: int, email: str, hashed_password: str, is_active: bool = True):
+        self.id = id
+        self.email = email
+        self.hashed_password = hashed_password
+        self.is_active = is_active
+{% endif %}

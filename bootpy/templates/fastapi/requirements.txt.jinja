@@ -1,0 +1,25 @@
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+pydantic-settings>=2.0.0
+python-multipart>=0.0.6
+{% if database == 'PostgreSQL' %}
+psycopg2-binary>=2.9.6
+{% endif %}
+{% if async_orm %}
+sqlalchemy>=2.0.0
+aiosqlite>=0.19.0
+{% if database == 'PostgreSQL' %}
+asyncpg>=0.28.0
+{% endif %}
+{% endif %}
+{% if auth_jwt %}
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+{% endif %}
+{% if pytest %}
+pytest>=7.4.0
+httpx>=0.24.1
+{% if async_orm %}
+pytest-asyncio>=0.21.0
+{% endif %}
+{% endif %}

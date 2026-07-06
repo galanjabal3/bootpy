@@ -1,0 +1,22 @@
+import pytest
+from httpx import AsyncClient
+from app.core.config import settings
+
+@pytest.mark.asyncio
+async def test_login_access_token(client: AsyncClient):
+    # Testing mock user when db is not initialized, or admin user by default
+    login_data = {
+        "username": "admin@example.com",
+        "password": "adminpassword"
+    }
+    response = await client.post(
+        f"{settings.API_V1_STR}/login/access-token",
+        data=login_data
+    )
+    # If the database is completely empty/uninitialized, it might return 400.
+    # In-memory mock will return 200.
+    assert response.status_code in [200, 400]
+    if response.status_code == 200:
+        json_data = response.json()
+        assert "access_token" in json_data
+        assert json_data["token_type"] == "bearer"

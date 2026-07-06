@@ -1,0 +1,33 @@
+import pytest
+import json
+from django.urls import reverse
+{% if drf %}
+from rest_framework.test import APIClient
+{% else %}
+from django.test import Client
+{% endif %}
+
+@pytest.fixture
+def client():
+    {% if drf %}
+    return APIClient()
+    {% else %}
+    return Client()
+    {% endif %}
+
+@pytest.mark.django_db
+def test_health_check(client):
+    response = client.get(reverse('health-check'))
+    assert response.status_code == 200
+    data = json.loads(response.content)
+    assert data['status'] == 'healthy'
+    assert data['framework'] == 'Django'
+
+@pytest.mark.django_db
+def test_item_list(client):
+    {% if drf %}
+    response = client.get('/api/items/')
+    {% else %}
+    response = client.get(reverse('item-list'))
+    {% endif %}
+    assert response.status_code == 200

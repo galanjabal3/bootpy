@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL={% if database == 'SQLite' %}sqlite+aiosqlite:///./test.db{% else %}postgresql+asyncpg://postgres:postgres@db:5432/postgres{% endif %}
+    {% if database == 'PostgreSQL' %}
+    depends_on:
+      - db
+    {% endif %}
+
+  {% if database == 'PostgreSQL' %}
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+  {% endif %}
