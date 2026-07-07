@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bootpy"
-version = "0.1.0"
+version = "0.1.1"
 description = "Interactive Python project scaffolding CLI tool"
 readme = "README.md"
 authors = [
-    { name = "Galan Jabal", email = "galanjabal@example.com" }
+    { name = "Galan Jabal", email = "70507032+galanjabal3@users.noreply.github.com" }
 ]
 requires-python = ">=3.9"
 classifiers = [
