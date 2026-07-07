@@ -26,6 +26,12 @@ dependencies = [
 [project.scripts]
 bootpy = "bootpy.cli:app"
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+bootpy = ["templates/**/*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
