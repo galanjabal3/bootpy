@@ -64,3 +64,22 @@ def test_django_generation():
         assert os.path.exists(os.path.join(target_path, "core", "serializers.py"))
         assert os.path.exists(os.path.join(target_path, "tests", "test_models.py"))
         assert os.path.exists(os.path.join(target_path, "pytest.ini"))
+
+def test_invalid_framework():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        answers = {
+            "project_name": "invalid-project",
+            "framework": "NonExistentFramework",
+            "database": "SQLite",
+            "docker": False,
+            "pytest": False
+        }
+        
+        target_path = os.path.join(tmpdir, answers["project_name"])
+        
+        # Generator should raise ValueError for invalid framework
+        with pytest.raises(ValueError, match="Template directory for framework 'nonexistentframework' not found."):
+            generate_project(target_path, answers)
+            
+        # Ensure target directory was not created (rollback functionality)
+        assert not os.path.exists(target_path)

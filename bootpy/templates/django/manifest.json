@@ -1,0 +1,9 @@
+{
+    "skip_files": {
+        "Dockerfile": "not docker",
+        "docker-compose.yml": "not docker",
+        "serializers.py": "not drf",
+        "test_models.py": "not pytest",
+        "test_views.py": "not pytest"
+    }
+}

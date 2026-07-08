@@ -1,0 +1,18 @@
+{
+    "skip_paths": {
+        "db": "not async_orm"
+    },
+    "skip_files": {
+        "Dockerfile": "not docker",
+        "docker-compose.yml": "not docker",
+        "security.py": "not auth_jwt",
+        "auth.py": "not auth_jwt",
+        "user.py": "not auth_jwt",
+        "token.py": "not auth_jwt",
+        "test_auth.py": "not auth_jwt",
+        "session.py": "not async_orm",
+        "base.py": "not async_orm",
+        "conftest.py": "not pytest",
+        "test_main.py": "not pytest"
+    }
+}
