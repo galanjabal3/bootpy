@@ -5,7 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-07-23
+
+### Fixed
+- Remove dead code: `if rel_root == "manifest.json"` in `generator.py` (condition was never reachable since `os.walk` yields directories, not files)
+- Refactor `should_skip_path()` to eliminate double negation — logic is now consistent with `should_skip_file()`
+- Remove orphan dependency `questionary` from `pyproject.toml` and `requirements.txt` (library was never imported)
+- Remove legacy `setup.py` (fully superseded by `pyproject.toml`)
+
+### Added
+- Ruff linter (`ruff>=0.5.0`) added to dev dependencies (`requirements-dev.txt`) and CI pipeline
+- Python 3.12 added to CI test matrix
+- Negative case tests: verify optional files are **not** generated when user opts out (Docker, JWT Auth, Async ORM, DRF, Pytest)
+- Unit tests for `validate_project_name()` covering valid and invalid input patterns
+
 ## [0.1.1] - 2026-07-07
+
 
 ### Fixed
 - Template files (`.jinja`) were not included when the package was installed via pip
