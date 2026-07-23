@@ -1,11 +1,13 @@
 import os
 from typing import Optional
+
 import typer
 from rich.console import Console
 from rich.panel import Panel
+
 from bootpy import __version__
-from bootpy.prompts import get_scaffold_answers
 from bootpy.generator import generate_project
+from bootpy.prompts import get_scaffold_answers
 
 app = typer.Typer(help="bootpy: Interactive Python Project Scaffolding CLI Tool")
 console = Console()
@@ -46,25 +48,25 @@ def main(
     """
     console.print(BANNER)
     console.print("[bold white]Welcome to bootpy! Let's scaffold your project.[/bold white]\n")
-    
+
     try:
         answers = get_scaffold_answers()
-        
+
         target_path = os.path.abspath(os.path.join(output_dir, answers["project_name"]))
-        
+
         # Check if directory already exists and is not empty
         if os.path.exists(target_path) and os.listdir(target_path):
             console.print(f"\n[bold red]Error: Target directory '{target_path}' already exists and is not empty.[/bold red]")
             raise typer.Exit(code=1)
-            
+
         console.print(f"\n[yellow]Generating project in [bold]{target_path}[/bold]...[/yellow]")
-        
+
         # Call generator
         generate_project(target_path, answers)
-        
+
         # Display Success Message
         console.print("\n[bold green]🚀 Project scaffolded successfully![/bold green]")
-        
+
         instructions = f"""
 To get started:
   [bold cyan]cd {answers['project_name']}[/bold cyan]
@@ -74,13 +76,13 @@ To get started:
 """
         if answers["docker"]:
             instructions += "  [bold cyan]docker-compose up --build[/bold cyan] (to run inside containers)\n"
-            
+
         console.print(Panel(
             instructions.strip(),
             title="[bold green]Next Steps[/bold green]",
             expand=False
         ))
-        
+
     except KeyboardInterrupt:
         console.print("\n[yellow]Scaffolding cancelled by user.[/yellow]")
         raise typer.Exit(code=0)
