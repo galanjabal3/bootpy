@@ -5,7 +5,7 @@
 [![CI](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml/badge.svg)](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PyPI version](https://img.shields.io/pypi/v/bootpy)](https://pypi.org/project/bootpy/)
+[![PyPI version](https://img.shields.io/pypi/v/bootpy-cli)](https://pypi.org/project/bootpy-cli/)
 
 ---
 
@@ -20,7 +20,7 @@ Think `create-react-app`, but for Python backend projects.
 ## 🚀 Quick Start
 
 ```bash
-pip install bootpy
+pip install bootpy-cli
 bootpy
 ```
 
