@@ -1,0 +1,31 @@
+# {{ project_name }}
+
+A Flask application scaffolded with [bootpy](https://pypi.org/project/bootpy-cli/).
+
+## Quick Start
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+flask run
+```
+
+## Project Structure
+
+```
+{{ project_name }}/
+├── app/
+│   ├── __init__.py        # App factory
+│   ├── core/
+│   │   └── config.py      # Configuration
+│   ├── models/
+│   │   └── user.py        # User model
+│   ├── routes/
+│   │   └── main.py        # Main routes
+│   └── services/
+│       └── user_service.py # Business logic
+├── tests/
+├── requirements.txt
+└── .env
+```

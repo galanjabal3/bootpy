@@ -1,0 +1,13 @@
+flask>=3.0.0
+flask-sqlalchemy>=3.1.0
+python-dotenv>=1.0.0
+{% if database == 'PostgreSQL' %}
+psycopg2-binary>=2.9.6
+{% endif %}
+{% if auth_jwt %}
+flask-jwt-extended>=4.6.0
+passlib[bcrypt]>=1.7.4
+{% endif %}
+{% if pytest %}
+pytest>=7.4.0
+{% endif %}

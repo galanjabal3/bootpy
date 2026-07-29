@@ -1,6 +1,6 @@
 # bootpy 🐍
 
-> **Interactive multi-framework Python scaffolding CLI** — scaffold a production-ready FastAPI or Django project in under 60 seconds.
+> **Interactive multi-framework Python scaffolding CLI** — scaffold a production-ready FastAPI, Django, or Flask project in under 60 seconds.
 
 [![CI](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml/badge.svg)](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
@@ -24,12 +24,14 @@ pip install bootpy-cli
 bootpy
 ```
 
-Follow the interactive prompts:
+### Interactive Mode
+
+Follow the prompts:
 
 ```
 🔧 Project Configuration
 Enter project name: my-api
-Choose Python framework [FastAPI/Django]: FastAPI
+Choose Python framework [FastAPI/Django/Flask]: FastAPI
 Choose database [SQLite/PostgreSQL]: PostgreSQL
 Include Docker & Docker Compose setup? [y/n]: y
 Include Pytest testing setup? [y/n]: y
@@ -48,6 +50,21 @@ Generating project in /path/to/my-api...
 🚀 Project scaffolded successfully!
 ```
 
+### Non-interactive Mode
+
+For CI/CD and automation:
+
+```bash
+# FastAPI with PostgreSQL, Docker, JWT
+bootpy create my-api --framework fastapi --database postgres --jwt
+
+# Flask without Docker
+bootpy create my-app --framework flask --no-docker
+
+# List available templates
+bootpy list
+```
+
 ---
 
 ## ⚙️ Configuration Options
@@ -57,7 +74,7 @@ Generating project in /path/to/my-api...
 | Option | Choices | Default |
 |---|---|---|
 | Project name | Any alphanumeric + `-_` | `my-project` |
-| Framework | `FastAPI`, `Django` | `FastAPI` |
+| Framework | `FastAPI`, `Django`, `Flask` | `FastAPI` |
 | Database | `SQLite`, `PostgreSQL` | `SQLite` |
 | Docker & Docker Compose | `y/n` | `y` |
 | Pytest setup | `y/n` | `y` |
@@ -75,6 +92,12 @@ Generating project in /path/to/my-api...
 |---|---|---|
 | Django Admin panel | `y/n` | `y` |
 | Django REST Framework | `y/n` | `y` |
+
+### Flask-specific
+
+| Option | Choices | Default |
+|---|---|---|
+| JWT Authentication | `y/n` | `y` |
 
 ---
 
@@ -139,6 +162,32 @@ my-django-project/
 └── .gitignore
 ```
 
+### Flask (full options)
+
+```
+my-flask-app/
+├── app/
+│   ├── __init__.py                # App factory
+│   ├── core/
+│   │   └── config.py              # Configuration classes
+│   ├── models/
+│   │   └── user.py                # SQLAlchemy User model
+│   ├── routes/
+│   │   ├── main.py                # Main routes
+│   │   └── auth.py                # JWT login endpoint
+│   └── services/
+│       └── user_service.py        # Business logic
+├── tests/
+│   ├── conftest.py                # Pytest fixtures
+│   └── test_main.py
+├── .env
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
+
 ---
 
 ## 🛠️ Tech Stack
@@ -176,15 +225,14 @@ bootpy
 
 ## 🧠 Design Decisions
 
-### Why FastAPI + Django as the first two frameworks?
+### Why FastAPI + Django + Flask?
 
-FastAPI and Django represent **the most contrasting philosophies** in Python backend development:
+FastAPI, Django, and Flask represent **the most popular philosophies** in Python backend development:
 - **FastAPI**: async-first, type-hint driven, OpenAPI auto-generation, minimal structure
 - **Django**: synchronous ORM, batteries-included, admin panel, opinionated structure
+- **Flask**: minimalist, flexible, extensions-based, lightweight
 
-Supporting both frameworks in one CLI requires understanding that their project structures are fundamentally different — not just in syntax but in philosophy. This was intentional: it tells a stronger architecture story than a single-framework tool would.
-
-Flask was skipped for v1 because its minimalism means the scaffold would be nearly identical to a FastAPI base structure with fewer features. It's a natural v2 candidate.
+Supporting all three frameworks in one CLI requires understanding that their project structures are fundamentally different — not just in syntax but in philosophy.
 
 ### Why Jinja2 for templating instead of string interpolation?
 

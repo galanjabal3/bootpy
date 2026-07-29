@@ -69,6 +69,35 @@ def test_django_generation():
         assert os.path.exists(os.path.join(target_path, "tests", "test_models.py"))
         assert os.path.exists(os.path.join(target_path, "pytest.ini"))
 
+def test_flask_generation():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        answers = {
+            "project_name": "my-flask-app",
+            "framework": "Flask",
+            "database": "SQLite",
+            "docker": True,
+            "pytest": True,
+            "auth_jwt": True
+        }
+
+        target_path = os.path.join(tmpdir, answers["project_name"])
+        generate_project(target_path, answers)
+
+        # Verify files are created
+        assert os.path.exists(os.path.join(target_path, "README.md"))
+        assert os.path.exists(os.path.join(target_path, "requirements.txt"))
+        assert os.path.exists(os.path.join(target_path, "Dockerfile"))
+        assert os.path.exists(os.path.join(target_path, "docker-compose.yml"))
+        assert os.path.exists(os.path.join(target_path, ".env"))
+        assert os.path.exists(os.path.join(target_path, "app", "__init__.py"))
+        assert os.path.exists(os.path.join(target_path, "app", "core", "config.py"))
+        assert os.path.exists(os.path.join(target_path, "app", "models", "user.py"))
+        assert os.path.exists(os.path.join(target_path, "app", "routes", "main.py"))
+        assert os.path.exists(os.path.join(target_path, "app", "routes", "auth.py"))
+        assert os.path.exists(os.path.join(target_path, "app", "services", "user_service.py"))
+        assert os.path.exists(os.path.join(target_path, "tests", "conftest.py"))
+        assert os.path.exists(os.path.join(target_path, "tests", "test_main.py"))
+
 def test_invalid_framework():
     with tempfile.TemporaryDirectory() as tmpdir:
         answers = {
@@ -164,6 +193,40 @@ def test_django_without_docker_and_drf():
         # Pytest files must NOT exist
         assert not os.path.exists(os.path.join(target_path, "tests", "test_models.py"))
         assert not os.path.exists(os.path.join(target_path, "tests", "test_views.py"))
+
+
+def test_flask_without_docker_and_auth():
+    """Optional Flask files must NOT be generated when user opts out."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        answers = {
+            "project_name": "minimal-flask",
+            "framework": "Flask",
+            "database": "SQLite",
+            "docker": False,
+            "pytest": False,
+            "auth_jwt": False
+        }
+
+        target_path = os.path.join(tmpdir, answers["project_name"])
+        generate_project(target_path, answers)
+
+        # Core files should still exist
+        assert os.path.exists(os.path.join(target_path, "README.md"))
+        assert os.path.exists(os.path.join(target_path, "requirements.txt"))
+        assert os.path.exists(os.path.join(target_path, "app", "__init__.py"))
+        assert os.path.exists(os.path.join(target_path, "app", "core", "config.py"))
+        assert os.path.exists(os.path.join(target_path, "app", "routes", "main.py"))
+
+        # Docker files must NOT exist
+        assert not os.path.exists(os.path.join(target_path, "Dockerfile"))
+        assert not os.path.exists(os.path.join(target_path, "docker-compose.yml"))
+
+        # Auth files must NOT exist
+        assert not os.path.exists(os.path.join(target_path, "app", "routes", "auth.py"))
+
+        # Pytest files must NOT exist
+        assert not os.path.exists(os.path.join(target_path, "tests", "conftest.py"))
+        assert not os.path.exists(os.path.join(target_path, "tests", "test_main.py"))
 
 
 # --- validate_project_name Tests ---

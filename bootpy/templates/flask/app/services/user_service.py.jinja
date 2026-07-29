@@ -1,0 +1,17 @@
+from app.models import db, User
+
+class UserService:
+    @staticmethod
+    def get_user_by_id(user_id):
+        return User.query.get_or_404(user_id)
+
+    @staticmethod
+    def get_user_by_email(email):
+        return User.query.filter_by(email=email).first()
+
+    @staticmethod
+    def create_user(username, email):
+        user = User(username=username, email=email)
+        db.session.add(user)
+        db.session.commit()
+        return user

@@ -1,0 +1,12 @@
+{
+    "skip_files": {
+        "Dockerfile": "not docker",
+        "docker-compose.yml": "not docker",
+        "security.py": "not auth_jwt",
+        "auth.py": "not auth_jwt",
+        "user.py": "not auth_jwt",
+        "test_auth.py": "not auth_jwt",
+        "conftest.py": "not pytest",
+        "test_main.py": "not pytest"
+    }
+}

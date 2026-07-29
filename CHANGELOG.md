@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-07-27
+
+### Added
+- Non-interactive mode: `bootpy create <name> --framework <fw> --database <db>` for CI/CD and automation
+- `bootpy list` command to display all available templates
+- **Flask** framework support with 18 template files
+  - App factory pattern
+  - SQLAlchemy ORM
+  - JWT Authentication (optional)
+  - Docker & Docker Compose (optional)
+  - Pytest setup (optional)
+- Flask-specific options in interactive mode
+- Unit tests for Flask generation and negative cases
+
+### Changed
+- CLI restructured with subcommands (`create`, `list`)
+- Interactive mode now runs as default callback (no subcommand required)
+- Framework validation updated to include Flask
+
 ## [0.1.3] - 2026-07-23
 
 ### Fixed
