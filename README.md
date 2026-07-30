@@ -1,6 +1,6 @@
 # bootpy 🐍
 
-> **Interactive multi-framework Python scaffolding CLI** — scaffold a production-ready FastAPI, Django, or Flask project in under 60 seconds.
+> **Interactive multi-framework Python scaffolding CLI** — scaffold a production-ready FastAPI, Django, Flask, or Litestar project in under 60 seconds.
 
 [![CI](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml/badge.svg)](https://github.com/galanjabal3/bootpy/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
@@ -31,7 +31,7 @@ Follow the prompts:
 ```
 🔧 Project Configuration
 Enter project name: my-api
-Choose Python framework [FastAPI/Django/Flask]: FastAPI
+Choose Python framework [FastAPI/Django/Flask/Litestar]: FastAPI
 Choose database [SQLite/PostgreSQL]: PostgreSQL
 Include Docker & Docker Compose setup? [y/n]: y
 Include Pytest testing setup? [y/n]: y
@@ -61,6 +61,9 @@ bootpy create my-api --framework fastapi --database postgres --jwt
 # Flask without Docker
 bootpy create my-app --framework flask --no-docker
 
+# Litestar with custom template
+bootpy create my-api --template ./my-company-template
+
 # List available templates
 bootpy list
 ```
@@ -74,7 +77,7 @@ bootpy list
 | Option | Choices | Default |
 |---|---|---|
 | Project name | Any alphanumeric + `-_` | `my-project` |
-| Framework | `FastAPI`, `Django`, `Flask` | `FastAPI` |
+| Framework | `FastAPI`, `Django`, `Flask`, `Litestar` | `FastAPI` |
 | Database | `SQLite`, `PostgreSQL` | `SQLite` |
 | Docker & Docker Compose | `y/n` | `y` |
 | Pytest setup | `y/n` | `y` |
@@ -97,6 +100,13 @@ bootpy list
 
 | Option | Choices | Default |
 |---|---|---|
+| JWT Authentication | `y/n` | `y` |
+
+### Litestar-specific
+
+| Option | Choices | Default |
+|---|---|---|
+| Async ORM (SQLAlchemy 2.0) | `y/n` | `y` |
 | JWT Authentication | `y/n` | `y` |
 
 ---
@@ -188,6 +198,73 @@ my-flask-app/
 └── .gitignore
 ```
 
+### Litestar (full options)
+
+```
+my-litestar-app/
+├── app/
+│   ├── __init__.py                # App factory
+│   ├── core/
+│   │   └── __init__.py            # Configuration
+│   ├── controllers/
+│   │   └── __init__.py            # Route handlers
+│   ├── dto/
+│   │   └── __init__.py            # Data transfer objects
+│   ├── models/
+│   │   └── __init__.py            # SQLAlchemy models
+│   └── services/
+│       └── __init__.py            # Business logic
+├── tests/
+│   ├── conftest.py                # Pytest fixtures + AsyncClient
+│   └── test_main.py
+├── .env
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
+
+---
+
+## 🎨 Custom Templates
+
+Use your own templates with the `--template` flag:
+
+```bash
+bootpy create my-api --template ./my-company-template
+```
+
+### Template Structure
+
+Your custom template directory must contain:
+- `manifest.json` (optional) — skip rules for files
+- `*.jinja` files — Jinja2 templates
+
+Example:
+```
+my-template/
+├── manifest.json
+├── README.md.jinja
+├── requirements.txt.jinja
+├── app/
+│   ├── __init__.py.jinja
+│   └── main.py.jinja
+└── tests/
+    └── test_main.py.jinja
+```
+
+### Manifest Format
+
+```json
+{
+    "skip_files": {
+        "Dockerfile": "not docker",
+        "auth.py": "not auth_jwt"
+    }
+}
+```
+
 ---
 
 ## 🛠️ Tech Stack
@@ -225,14 +302,15 @@ bootpy
 
 ## 🧠 Design Decisions
 
-### Why FastAPI + Django + Flask?
+### Why FastAPI + Django + Flask + Litestar?
 
-FastAPI, Django, and Flask represent **the most popular philosophies** in Python backend development:
+These four frameworks represent **the most popular philosophies** in Python backend development:
 - **FastAPI**: async-first, type-hint driven, OpenAPI auto-generation, minimal structure
 - **Django**: synchronous ORM, batteries-included, admin panel, opinionated structure
 - **Flask**: minimalist, flexible, extensions-based, lightweight
+- **Litestar**: high-performance, type-safe, advanced DI, modern Python
 
-Supporting all three frameworks in one CLI requires understanding that their project structures are fundamentally different — not just in syntax but in philosophy.
+Supporting all four frameworks in one CLI requires understanding that their project structures are fundamentally different — not just in syntax but in philosophy.
 
 ### Why Jinja2 for templating instead of string interpolation?
 

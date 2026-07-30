@@ -40,16 +40,32 @@ def generate_project(target_dir: str, answers: dict):
     try:
         project_staging_dir = os.path.join(staging_dir, answers["project_name"])
 
+        # Check if using custom template
+        custom_template = answers.get("custom_template")
+        if custom_template:
+            templates_dir = custom_template
+            framework = "custom"
+        else:
+            templates_dir = get_templates_dir()
+            framework = answers["framework"].lower()
+
         # Initialize Jinja environment
-        templates_dir = get_templates_dir()
-        framework = answers["framework"].lower()
         env = Environment(
             loader=FileSystemLoader(templates_dir),
             keep_trailing_newline=True
         )
 
-        framework_template_dir = os.path.join(templates_dir, framework)
-        manifest = load_manifest(framework)
+        if custom_template:
+            framework_template_dir = custom_template
+            manifest_path = os.path.join(custom_template, "manifest.json")
+            if os.path.exists(manifest_path):
+                with open(manifest_path) as f:
+                    manifest = json.load(f)
+            else:
+                manifest = {"skip_paths": {}, "skip_files": {}}
+        else:
+            framework_template_dir = os.path.join(templates_dir, framework)
+            manifest = load_manifest(framework)
 
         # Check if template directory exists
         if not os.path.exists(framework_template_dir):
@@ -102,7 +118,10 @@ def generate_project(target_dir: str, answers: dict):
                 target_file_path = os.path.join(current_staging_path, target_file_name)
 
                 # Render and write template
-                template_name = f"{framework}/{template_file_path}"
+                if custom_template:
+                    template_name = template_file_path
+                else:
+                    template_name = f"{framework}/{template_file_path}"
                 template = env.get_template(template_name)
 
                 context = answers.copy()

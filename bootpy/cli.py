@@ -28,6 +28,7 @@ FRAMEWORKS = {
     "fastapi": {"name": "FastAPI", "files": 19},
     "django": {"name": "Django", "files": 21},
     "flask": {"name": "Flask", "files": 18},
+    "litestar": {"name": "Litestar", "files": 17},
 }
 
 def version_callback(value: bool):
@@ -70,14 +71,15 @@ To get started:
 @app.command()
 def create(
     name: str = typer.Argument(help="Project name"),
-    framework: str = typer.Option("fastapi", "--framework", "-f", help="Python framework (fastapi/django/flask)"),
+    framework: str = typer.Option("fastapi", "--framework", "-f", help="Python framework (fastapi/django/flask/litestar)"),
     database: str = typer.Option("sqlite", "--database", "-d", help="Database (sqlite/postgres)"),
     docker: bool = typer.Option(True, "--docker/--no-docker", help="Include Docker setup"),
     pytest: bool = typer.Option(True, "--pytest/--no-pytest", help="Include Pytest setup"),
-    jwt: bool = typer.Option(True, "--jwt/--no-jwt", help="Include JWT auth (FastAPI/Flask only)"),
-    async_orm: bool = typer.Option(True, "--async-orm/--no-async-orm", help="Include Async ORM (FastAPI only)"),
+    jwt: bool = typer.Option(True, "--jwt/--no-jwt", help="Include JWT auth (FastAPI/Flask/Litestar only)"),
+    async_orm: bool = typer.Option(True, "--async-orm/--no-async-orm", help="Include Async ORM (FastAPI/Litestar only)"),
     django_admin: bool = typer.Option(True, "--django-admin/--no-django-admin", help="Include Django Admin (Django only)"),
     drf: bool = typer.Option(True, "--drf/--no-drf", help="Include DRF (Django only)"),
+    template: Optional[str] = typer.Option(None, "--template", "-t", help="Custom template directory path"),
     output_dir: str = typer.Option(".", "--output-dir", "-o", help="Output directory"),
 ):
     """
@@ -86,13 +88,45 @@ def create(
     Example:
 
       bootpy create my-api --framework fastapi --database postgres --jwt
+      bootpy create my-api --template ./my-custom-template
     """
     console.print(BANNER)
+
+    # Handle custom template
+    if template:
+        template_path = os.path.abspath(template)
+        if not os.path.exists(template_path):
+            console.print(f"[bold red]Error: Template directory '{template_path}' not found.[/bold red]")
+            raise typer.Exit(code=1)
+        if not os.path.exists(os.path.join(template_path, "manifest.json")):
+            console.print(f"[bold red]Error: No manifest.json found in '{template_path}'.[/bold red]")
+            raise typer.Exit(code=1)
+
+        answers = {
+            "project_name": name,
+            "framework": "custom",
+            "database": "SQLite",
+            "docker": False,
+            "pytest": False,
+            "custom_template": template_path,
+        }
+
+        target_path = os.path.abspath(os.path.join(output_dir, name))
+
+        try:
+            _generate(target_path, answers)
+        except KeyboardInterrupt:
+            console.print("\n[yellow]Scaffolding cancelled by user.[/yellow]")
+            raise typer.Exit(code=0)
+        except Exception as e:
+            console.print(f"\n[bold red]An error occurred during scaffolding: {e}[/bold red]")
+            raise typer.Exit(code=1)
+        return
 
     # Validate framework
     framework_lower = framework.lower()
     if framework_lower not in FRAMEWORKS:
-        console.print(f"[bold red]Error: Invalid framework '{framework}'. Choose: fastapi, django, flask[/bold red]")
+        console.print(f"[bold red]Error: Invalid framework '{framework}'. Choose: fastapi, django, flask, litestar[/bold red]")
         raise typer.Exit(code=1)
 
     # Validate database
@@ -117,6 +151,9 @@ def create(
     elif framework_lower == "django":
         answers["django_admin"] = django_admin
         answers["drf"] = drf
+    elif framework_lower == "litestar":
+        answers["async_orm"] = async_orm
+        answers["auth_jwt"] = jwt
 
     target_path = os.path.abspath(os.path.join(output_dir, name))
 
@@ -155,6 +192,11 @@ def list():
         "Flask",
         "18",
         "SQLAlchemy, JWT Auth, Docker, Pytest"
+    )
+    table.add_row(
+        "Litestar",
+        "17",
+        "Async ORM, DTOs, DI, Docker, Pytest"
     )
 
     console.print(table)

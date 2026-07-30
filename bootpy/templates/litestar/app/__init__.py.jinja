@@ -1,0 +1,11 @@
+from litestar import Litestar
+from litestar.config.app import AppConfig
+from app.core.config import settings
+from app.controllers import router
+
+def create_app() -> Litestar:
+    return Litestar(
+        route_handlers=[router],
+        on_startup=[],
+        debug=settings.DEBUG,
+    )

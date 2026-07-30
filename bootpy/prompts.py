@@ -24,7 +24,7 @@ def get_scaffold_answers() -> dict:
     # 2. Framework
     framework = Prompt.ask(
         "[yellow]Choose Python framework[/yellow]",
-        choices=["FastAPI", "Django", "Flask"],
+        choices=["FastAPI", "Django", "Flask", "Litestar"],
         default="FastAPI"
     )
 
@@ -60,6 +60,10 @@ def get_scaffold_answers() -> dict:
         answers["drf"] = Confirm.ask("[yellow]Include Django REST Framework (DRF)?[/yellow]", default=True)
     elif framework == "Flask":
         console.print("\n[bold cyan]🧪 Flask Specific Options[/bold cyan]")
+        answers["auth_jwt"] = Confirm.ask("[yellow]Include JWT Authentication boilerplate?[/yellow]", default=True)
+    elif framework == "Litestar":
+        console.print("\n[bold cyan]⚡ Litestar Specific Options[/bold cyan]")
+        answers["async_orm"] = Confirm.ask("[yellow]Include Async ORM (SQLAlchemy async)?[/yellow]", default=True)
         answers["auth_jwt"] = Confirm.ask("[yellow]Include JWT Authentication boilerplate?[/yellow]", default=True)
 
     return answers

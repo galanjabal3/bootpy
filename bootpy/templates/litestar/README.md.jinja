@@ -1,0 +1,33 @@
+# {{ project_name }}
+
+A Litestar application scaffolded with [bootpy](https://pypi.org/project/bootpy-cli/).
+
+## Quick Start
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+litestar --app app run
+```
+
+## Project Structure
+
+```
+{{ project_name }}/
+├── app/
+│   ├── __init__.py        # App factory
+│   ├── core/
+│   │   └── __init__.py    # Configuration
+│   ├── controllers/
+│   │   └── __init__.py    # Route handlers
+│   ├── dto/
+│   │   └── __init__.py    # Data transfer objects
+│   ├── models/
+│   │   └── __init__.py    # SQLAlchemy models
+│   └── services/
+│       └── __init__.py    # Business logic
+├── tests/
+├── requirements.txt
+└── .env
+```

@@ -1,0 +1,6 @@
+from litestar import get
+from app.core.config import settings
+
+@get("/")
+def health_check() -> dict:
+    return {"message": f"Welcome to {settings.PROJECT_NAME} API", "status": "ok"}

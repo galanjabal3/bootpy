@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-07-29
+
+### Added
+- **Litestar** framework support with 17 template files
+  - App factory pattern
+  - SQLAlchemy async ORM
+  - DTOs (Data Transfer Objects)
+  - Dependency Injection
+  - JWT Authentication (optional)
+  - Docker & Docker Compose (optional)
+  - Pytest setup with async support (optional)
+- **Custom templates support**: `bootpy create my-api --template ./my-template/`
+  - Load templates from any directory
+  - Manifest.json support for skip logic
+  - Full Jinja2 rendering
+- Litestar-specific options in interactive mode
+- Unit tests for Litestar generation, custom templates, and negative cases
+
+### Changed
+- Framework validation updated to include Litestar
+- Non-interactive mode now supports `--template` option
+- CLI help text updated with all 4 frameworks
+
 ## [0.2.1] - 2026-07-29
 
 ### Fixed
