@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-09-03
+
+### Fixed
+- **Flask circular imports**: route definitions moved to `main.py`, `__init__.py` emptied
+- **Flask services import**: fixed `auth.py` to use explicit module import
+- **Flask models export**: `User` class now properly exported from `models/__init__.py`
+- **Flask duplicate fixtures**: removed duplicate test fixtures from `tests/__init__.py`
+- **Litestar manifest**: removed non-existent auth template references (`auth.py`, `security.py`, `user.py`, `test_auth.py`)
+- **Litestar prompts**: removed unimplemented `auth_jwt` prompt option
+
 ## [0.3.0] - 2026-07-29
 
 ### Added

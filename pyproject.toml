@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bootpy-cli"
-version = "0.3.0"
+version = "0.3.1"
 description = "Interactive Python project scaffolding CLI tool"
 readme = "README.md"
 authors = [
