@@ -64,6 +64,5 @@ def get_scaffold_answers() -> dict:
     elif framework == "Litestar":
         console.print("\n[bold cyan]⚡ Litestar Specific Options[/bold cyan]")
         answers["async_orm"] = Confirm.ask("[yellow]Include Async ORM (SQLAlchemy async)?[/yellow]", default=True)
-        answers["auth_jwt"] = Confirm.ask("[yellow]Include JWT Authentication boilerplate?[/yellow]", default=True)
 
     return answers

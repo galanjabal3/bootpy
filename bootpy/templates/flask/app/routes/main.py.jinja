@@ -1,5 +1,13 @@
-from flask import Blueprint
+from flask import jsonify, Blueprint
 
 main_bp = Blueprint("main", __name__)
 
-from app.routes import index, health
+
+@main_bp.route("/")
+def index():
+    return jsonify({"message": "Welcome to {{ project_name }} API"})
+
+
+@main_bp.route("/health")
+def health():
+    return jsonify({"status": "ok"})
